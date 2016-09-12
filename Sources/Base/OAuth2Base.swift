@@ -74,12 +74,15 @@ public class OAuth2Base {
 	
 	/// Defaults to `kSecAttrAccessibleWhenUnlocked`
 	public internal(set) var keychainAccessMode = kSecAttrAccessibleWhenUnlocked
+    
+    /// Defaults to `nil`
+    public internal(set) var keychainAccessGroup: String?
 	
 	
 	/**
 	Base initializer.
 	
-	Looks at the `keychain`, `keychain_access_mode` and `verbose` keys in the _settings_ dict. Everything else is handled by subclasses.
+	Looks at the `keychain`, `keychain_access_mode`, `keychain_access_group` and `verbose` keys in the _settings_ dict. Everything else is handled by subclasses.
 	*/
 	public init(settings: OAuth2JSON) {
 		self.settings = settings
@@ -91,6 +94,9 @@ public class OAuth2Base {
 		if let accessMode = settings["keychain_access_mode"] as? String {
 			keychainAccessMode = accessMode
 		}
+        if let accessGroup = settings["keychain_access_group"] as? String {
+            keychainAccessGroup = accessGroup
+        }
 		if let verb = settings["verbose"] as? Bool {
 			verbose = verb
 			if verbose {

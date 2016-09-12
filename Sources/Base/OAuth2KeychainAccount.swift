@@ -40,14 +40,32 @@ struct OAuth2KeychainAccount: KeychainGenericPasswordType {
 	
 	/// Keychain access mode.
 	let accessMode: String
+    
+    /// Keychain access mode.
+    let accessGroup: String?
 	
 	
 	init(oauth2: OAuth2Base, account: String, data inData: [String: AnyObject] = [:]) {
 		serviceName = oauth2.keychainServiceName()
 		accountName = account
 		accessMode = String(oauth2.keychainAccessMode)
+        accessGroup = oauth2.keychainAccessGroup
 		data = inData
 	}
+    
+    var attributes: [String : AnyObject] {
+        var attributes = [String: AnyObject]()
+        
+        attributes[String(kSecClass)] = kSecClassGenericPassword
+        attributes[String(kSecAttrAccessible)] = accessMode
+        attributes[String(kSecAttrService)] = serviceName
+        attributes[String(kSecAttrAccount)] = accountName
+        if let accessGroup = accessGroup {
+            attributes[String(kSecAttrAccessGroup)] = accessGroup
+        }
+        
+        return attributes
+    }
 }
 
 
