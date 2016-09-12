@@ -31,11 +31,15 @@ extension OAuth2 {
 	- throws: UnableToOpenAuthorizeURL on failure
 	*/
 	public final func openAuthorizeURLInBrowser(params: OAuth2StringDict? = nil) throws {
-		let url = try authorizeURL(params)
-		logger?.debug("OAuth2", msg: "Opening authorize URL in system browser: \(url)")
-		if !UIApplication.sharedApplication().openURL(url) {
-			throw OAuth2Error.UnableToOpenAuthorizeURL
-		}
+        #if !P2_APP_EXTENSIONS
+            let url = try authorizeURL(params)
+            logger?.debug("OAuth2", msg: "Opening authorize URL in system browser: \(url)")
+            if !UIApplication.sharedApplication().openURL(url) {
+                throw OAuth2Error.UnableToOpenAuthorizeURL
+            }
+        #else
+            fatalError("Open URL not supported in app extensions.")
+        #endif
 	}
 	
 	
